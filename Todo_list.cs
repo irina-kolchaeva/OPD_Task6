@@ -8,7 +8,6 @@ namespace OPDTask6
         public string? Date { get; set; }
         public string? Name { get; set; }
     }
-
     public class MiniApp : DbContext
     {
         public DbSet<Todo_list> Tasks { get; set; } = null!;

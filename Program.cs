@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System;
 
 namespace OPDTask6
 {
@@ -6,65 +6,36 @@ namespace OPDTask6
     {
         static void Main()
         {
-            Console.WriteLine("Выберите действие: ");
-            Console.WriteLine("1 - добавить запись в список дел");
-            Console.WriteLine("2 - вывести все данные из бд");
+            Console.WriteLine("СПИСОК ДЕЛ");
+            Console.WriteLine("1 - показать все запланированные дела");
+            Console.WriteLine("2 - добавить запись в список дел");
             Console.WriteLine("3 - изменить дату сдачи задания из списка дел");
-            Console.WriteLine("4 - удалить данные");
+            Console.WriteLine("4 - удалить запись");
             Console.WriteLine("0 - выход из программы");
             while(true)
             {
                 switch (char.ToLower(Console.ReadKey(true).KeyChar))
                 {
-                    case '1': Add();break;
-                    case '2': Read(); break;
+                    case '1': Read(); break;
+                    case '2': Add();break;
                     case '3': Update(); break;
                     case '4': Remove(); break;
-                    case '0': System.Environment.Exit(0); break;
+                    case '0': Environment.Exit(0); break;
                     default: break;
                 }
             }
         }
 
-        static void Add()
-        {
-            Console.WriteLine("\n*************************************************************************************************");
-            Console.WriteLine("Введите дату, когда нужно сдать задание: ");
-            string date = Console.ReadLine();
-            Console.WriteLine("Введите задание: ");
-            string name = Console.ReadLine();
-            //bool a = Int32.TryParse(Console.ReadLine(), out age);
-            //if (name2 != null && a)
-            if (date != null)
-            {
-                using (MiniApp app = new MiniApp())
-                {
-                    app.Tasks.Add(new Todo_list() { Date = date, Name = name });
-                    app.SaveChanges();
-                    Console.WriteLine("Данные успешно добавлены!");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Введите все данные!!!");
-                Add();
-            }
-            Console.WriteLine("Нажмите любую клавишу, чтобы вернуться в главное меню\n");
-            if (char.ToLower(Console.ReadKey(true).KeyChar) != null) Main();
-           
-        }
-
         static void Read()
         {
-            Console.WriteLine("\n*************************************************************************************************");
-            using (MiniApp app = new MiniApp())
+            Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            using (MiniApp app = new())
             {
                 var tasks = app.Tasks.ToList();
                 if (tasks.Count > 0)
                 {
-                    Console.WriteLine("  Id" + "".PadRight(4) +
-                        "Дата сдачи".PadRight(14) + "Задание");
-                    foreach(var u in tasks)
+                    Console.WriteLine("  Id" + "".PadRight(4) + "Дата сдачи".PadRight(14) + "Задание");
+                    foreach (var u in tasks)
                     {
                         Console.WriteLine("".PadRight(2) + u.Id + "".PadRight(5) + u.Date.PadRight(14) + u.Name);
                     }
@@ -74,21 +45,41 @@ namespace OPDTask6
                     Console.WriteLine("Список дел пуст");
                 }
             }
-            Console.WriteLine("Нажмите любую клавишу, чтобы вернуться в главное меню\n");
-            if (char.ToLower(Console.ReadKey(true).KeyChar) != null) Main();
-            
+        }
+
+        static void Add()
+        {
+            Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("Введите дату, когда нужно сдать задание: ");
+            string date = Console.ReadLine();
+            Console.WriteLine("Введите задание: ");
+            string name = Console.ReadLine();
+            if (date != "" && name != "")
+            {
+                using (MiniApp app = new())
+                {
+                    app.Tasks.Add(new Todo_list() { Date = date, Name = name });
+                    app.SaveChanges();
+                    Console.WriteLine("Запись успешно добавлена!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введите все данные для записи!");
+                Add();
+            }
         }
 
         static void Update()
         {
-            Console.WriteLine("\n*************************************************************************************************");
-            Console.WriteLine("Введите Id объекта, имя которого вы хотите обновить: ");
+            Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("Введите Id записи, дату выполнения которой нужно обновить: ");
             int id;
-            bool check = Int32.TryParse(Console.ReadLine(), out id);    
-            if(check)
+            bool check = Int32.TryParse(Console.ReadLine(), out id);
+            if (check)
             {
                 Todo_list task = null;
-                using (MiniApp app = new MiniApp())
+                using (MiniApp app = new())
                 {
                     task = app.Tasks.Find(id);
                     if (task != null)
@@ -99,33 +90,33 @@ namespace OPDTask6
                         {
                             task.Date = date;
                             app.Tasks.Update(task);
-                            Console.WriteLine("Данные успешно изменены!");
+                            Console.WriteLine("Запись успешно изменена!");
                         }
                         app.SaveChanges();
-
+                    }
+                    else
+                    {
+                        Console.WriteLine("Id отсутствует в базе данных");
                     }
                 }
             }
             else
             {
-                Console.WriteLine("Неккоректно введенное Id");
+                Console.WriteLine("Неккоректно введено Id");
                 Update();
-            }
-            Console.WriteLine("Нажмите любую клавишу, чтобы вернуться в главное меню\n");
-            if (char.ToLower(Console.ReadKey(true).KeyChar) != null) Main();
-            
+            }           
         }
 
         static void Remove()
         {
-            Console.WriteLine("\n*************************************************************************************************");
+            Console.WriteLine("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.WriteLine("Введите Id объекта, которого вы хотите удалить: ");
             int id;
             bool check = Int32.TryParse(Console.ReadLine(), out id);
             if (check)
             {
                 Todo_list task = null;
-                using(MiniApp app = new MiniApp())
+                using(MiniApp app = new())
                 {
                     try
                     {
@@ -134,7 +125,7 @@ namespace OPDTask6
                         app.SaveChanges();
                         Console.WriteLine("Данные успешно удалены!");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         Console.WriteLine("Id отсутствует в базе данных");
                     }
@@ -142,12 +133,9 @@ namespace OPDTask6
             }
             else
             {
-                Console.WriteLine("Введено некорректное значение");
+                Console.WriteLine("Неккоректно введено Id");
                 Remove();
             }
-            Console.WriteLine("Нажмите любую клавишу, чтобы вернуться в главное меню\n");
-            if (char.ToLower(Console.ReadKey(true).KeyChar) != null) Main();
-            
         }
     }
 }

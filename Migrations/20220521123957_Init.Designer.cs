@@ -11,7 +11,7 @@ using OPDTask6;
 namespace Задание_6.Migrations
 {
     [DbContext(typeof(MiniApp))]
-    [Migration("20220521005553_Init")]
+    [Migration("20220521123957_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
